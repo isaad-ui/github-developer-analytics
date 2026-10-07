@@ -1,15 +1,28 @@
+import os
 import requests
+
+
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+
+headers = {
+    "Accept": "application/vnd.github+json"
+}
+
+if GITHUB_TOKEN:
+    headers["Authorization"] = f"Bearer {GITHUB_TOKEN}"
 
 
 def get_user_data(user_name):
     url = f"https://api.github.com/users/{user_name}"
-    response = requests.get(url)
+
+    response = requests.get(url, headers=headers)
 
     if response.status_code == 404:
         print("User not found.")
         return None
 
     response.raise_for_status()
+
     return response.json()
 
 
@@ -25,7 +38,12 @@ def get_repositories(user_name):
             "page": page
         }
 
-        response = requests.get(url, params=params)
+        response = requests.get(
+            url,
+            params=params,
+            headers=headers
+        )
+
         response.raise_for_status()
 
         data = response.json()
@@ -34,6 +52,7 @@ def get_repositories(user_name):
             break
 
         repos.extend(data)
+
         page += 1
 
     return repos
@@ -118,8 +137,11 @@ def calculate_repository_statistics(repos_data):
         "most_recently_updated_repo": most_recently_updated_repo,
         "latest_update_time": latest_update_time
     }
+
+
 def calculate_repository_insights(repos_data):
     total_repositories = len(repos_data)
+
     repositories_with_languages = 0
     repositories_without_languages = 0
     repositories_with_stars = 0
@@ -158,6 +180,8 @@ def calculate_repository_insights(repos_data):
         "archived_repositories": archived_repositories,
         "average_stars": average_stars
     }
+
+
 def get_top_repositories(repos_data, limit=3):
     sorted_repositories = sorted(
         repos_data,
@@ -166,7 +190,6 @@ def get_top_repositories(repos_data, limit=3):
     )
 
     return sorted_repositories[:limit]
-
 
 
 def display_user_data(data):
@@ -212,18 +235,35 @@ def display_statistics(statistics):
     print(f"Forks: {statistics['highest_forks']}")
     print(f"Largest Repository: {statistics['largest_repo']}")
     print(f"Size: {statistics['largest_size']} KB")
-    print(f"Most Recently Updated Repository: {statistics['most_recently_updated_repo']}")
+    print(
+        f"Most Recently Updated Repository: "
+        f"{statistics['most_recently_updated_repo']}"
+    )
     print(f"Latest Update Time: {statistics['latest_update_time']}")
 
+
 def display_repository_insights(insights):
-  print("\nREPOSITORY INSIGHTS")
-  print(f"Total Repositories: {insights['total_repositories']}")
-  print(f"Repositories With Languages: {insights['repositories_with_languages']}")
-  print(f"Repositories Without Languages: {insights['repositories_without_languages']}")
-  print(f"Repositories With Stars: {insights['repositories_with_stars']}")
-  print(f"Forked Repositories: {insights['forked_repositories']}")
-  print(f"Archived Repositories: {insights['archived_repositories']}")
-  print(f"Average Stars Per Repository: {insights['average_stars']:.2f}")
+    print("\nREPOSITORY INSIGHTS")
+    print(f"Total Repositories: {insights['total_repositories']}")
+    print(
+        f"Repositories With Languages: "
+        f"{insights['repositories_with_languages']}"
+    )
+    print(
+        f"Repositories Without Languages: "
+        f"{insights['repositories_without_languages']}"
+    )
+    print(
+        f"Repositories With Stars: "
+        f"{insights['repositories_with_stars']}"
+    )
+    print(f"Forked Repositories: {insights['forked_repositories']}")
+    print(f"Archived Repositories: {insights['archived_repositories']}")
+    print(
+        f"Average Stars Per Repository: "
+        f"{insights['average_stars']:.2f}"
+    )
+
 
 def display_top_repositories(repositories):
     print("\nTOP REPOSITORIES")
@@ -256,7 +296,9 @@ def main():
 
         languages = analyze_languages(repos_data)
 
-        language_percentages = calculate_language_percentages(languages)
+        language_percentages = calculate_language_percentages(
+            languages
+        )
 
         display_repository_languages(language_percentages)
         display_repository_data(repos_data)
@@ -273,8 +315,14 @@ def main():
 
         display_top_repositories(top_repositories)
 
+    except requests.exceptions.HTTPError as error:
+        print(f"\nGitHub API error: {error}")
+
+        if error.response is not None:
+            print(f"Status code: {error.response.status_code}")
+
     except requests.exceptions.RequestException as error:
-        print(f"\nAn error occurred while connecting to GitHub: {error}")
+        print(f"\nConnection error: {error}")
 
 
 if __name__ == "__main__":
