@@ -1,6 +1,7 @@
 import { formatDate } from "../api.js";
+import { Link } from "react-router-dom";
 
-export default function TopRepos({ repos }) {
+export default function TopRepos({ repos, username }) {
   if (repos.length === 0) {
     return (
       <div className="section-block">
@@ -12,7 +13,14 @@ export default function TopRepos({ repos }) {
 
   return (
     <div className="section-block">
-      <h3 className="section-title">Top Repositories</h3>
+      <div className="section-block-header">
+        <h3 className="section-title">Top Repositories</h3>
+        {username && (
+          <Link to={`/repos/${username}`} className="btn btn-ghost view-all-btn">
+            View all →
+          </Link>
+        )}
+      </div>
       <div className="repo-list">
         {repos.map((repo, i) => (
           <a
