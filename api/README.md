@@ -200,3 +200,5 @@ Answers a single question about a user's GitHub data.
   "timestamp": "2026-10-08T12:00:00.000Z"
 }
 ```
+
+<!-- deployed: 2026-10-08 14:01:49 -->
