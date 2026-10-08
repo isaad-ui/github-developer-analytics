@@ -116,7 +116,12 @@ export default function Analytics() {
               <Link to={`/repos/${username}`} className="btn btn-primary">
                 View All {state.data.repos.length} Repositories →
               </Link>
-              <Link to="/" className="btn btn-secondary">
+              <Link to="/" className="btn btn-secondary"
+                onClick={() => setTimeout(() => {
+                  const el = document.getElementById("search");
+                  if (el) { el.scrollIntoView({ behavior: "smooth" }); el.querySelector("input")?.focus(); }
+                }, 100)}
+              >
                 Analyze Another Profile
               </Link>
             </div>

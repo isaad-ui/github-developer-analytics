@@ -73,7 +73,7 @@ export default function Home() {
               and developer intelligence — all in one place.
             </p>
 
-            <form className="hero-search" onSubmit={handleSubmit}>
+            <form className="hero-search" onSubmit={handleSubmit} id="search">
               <div className="hero-search-row">
                 <input
                   type="text"
@@ -362,7 +362,7 @@ export default function Home() {
       {/* ══════════════════════════════════════════
           CTA
       ══════════════════════════════════════════ */}
-      <section className="cta-section">
+      <section className="cta-section" id="cta">
         <div className="container">
           <div className="cta-box">
             <span className="section-label">Get started</span>
