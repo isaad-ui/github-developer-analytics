@@ -14,6 +14,18 @@ concurrency:
   group: "pages"
   cancel-in-progress: true
 
+# ─────────────────────────────────────────────────────────────
+# NOTE: This workflow deploys the static React frontend only.
+#
+# The Claude AI features require a separate backend API server
+# (see api/ folder). Set VITE_API_URL to the URL of your
+# deployed API server. If not set, AI features will attempt to
+# connect to http://localhost:3001 (only works locally).
+#
+# Recommended free hosting for the API: Render or Railway.
+# See api/README.md for full setup instructions.
+# ─────────────────────────────────────────────────────────────
+
 jobs:
   build-and-deploy:
     environment:
@@ -40,6 +52,11 @@ jobs:
       - name: Build
         run: npm run build
         working-directory: website
+        env:
+          # Set this secret in GitHub → Settings → Secrets → Actions
+          # to point the frontend at your deployed API server.
+          # Example: https://github-analytics-api.onrender.com
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
