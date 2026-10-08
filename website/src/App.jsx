@@ -9,7 +9,9 @@ function Navbar() {
     <header className="navbar">
       <div className="container nav-content">
         <Link to="/" className="logo">
-          <span className="logo-icon">GH</span>
+          <span className="logo-icon">
+            <img src="/github-developer-analytics/logo.svg" alt="GitHub Analytics logo" />
+          </span>
           GitHub Analytics
         </Link>
 
@@ -33,7 +35,9 @@ function Footer() {
       <div className="container footer-content">
         <div>
           <Link to="/" className="logo">
-            <span className="logo-icon">GH</span>
+            <span className="logo-icon">
+              <img src="/github-developer-analytics/logo.svg" alt="GitHub Analytics logo" />
+            </span>
             GitHub Analytics
           </Link>
           <p className="footer-tagline">
