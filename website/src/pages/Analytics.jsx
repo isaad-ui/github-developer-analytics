@@ -10,6 +10,8 @@ import LanguageBars   from "../components/LanguageBars.jsx";
 import RepoHighlights from "../components/RepoHighlights.jsx";
 import TopRepos       from "../components/TopRepos.jsx";
 import Insights       from "../components/Insights.jsx";
+import AIInsights     from "../components/AIInsights.jsx";
+import AskGitHub      from "../components/AskGitHub.jsx";
 
 export default function Analytics() {
   const { username } = useParams();
@@ -95,12 +97,9 @@ export default function Analytics() {
           <div className="results-container">
             {/* Page title */}
             <div className="analytics-page-title">
-              <h1>
-                Analytics for{" "}
-                <span className="gradient-text">@{username}</span>
-              </h1>
+              <h1>Analytics for @{username}</h1>
               <p className="analytics-subtitle">
-                Based on {state.data.repos.length} public repositories
+                {state.data.repos.length} public repositories · GitHub data + AI analysis
               </p>
             </div>
 
@@ -110,6 +109,31 @@ export default function Analytics() {
             <RepoHighlights stats={state.data.stats} />
             <TopRepos       repos={state.data.top} username={username} />
             <Insights       messages={state.data.insightMsgs} />
+
+            {/* ── AI Section divider ── */}
+            <div className="ai-section-divider">
+              <div className="ai-divider-line" />
+              <span className="ai-divider-label">AI-Powered Analysis</span>
+              <div className="ai-divider-line" />
+            </div>
+
+            {/* ── AI Developer Insights ── */}
+            <AIInsights data={{
+              user:      state.data.user,
+              repos:     state.data.repos,
+              languages: state.data.languages,
+              stats:     state.data.stats,
+              insights:  state.data.insights,
+            }} />
+
+            {/* ── Ask Your GitHub ── */}
+            <AskGitHub data={{
+              user:      state.data.user,
+              repos:     state.data.repos,
+              languages: state.data.languages,
+              stats:     state.data.stats,
+              insights:  state.data.insights,
+            }} />
 
             {/* Footer CTA */}
             <div className="analytics-footer-cta">

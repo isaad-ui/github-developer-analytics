@@ -320,9 +320,15 @@ export default function Home() {
               <span className="section-label">Developer Insights</span>
               <h2>Data you can act on, not just numbers to look at.</h2>
               <p>
-                The analytics engine generates practical observations
-                from your real repository data — helping you understand
-                what your GitHub activity actually means.
+                Once you analyze a profile, Claude AI generates a structured
+                written report covering your technical strengths, development
+                patterns, areas to improve, and practical next steps — based
+                only on your real GitHub data.
+              </p>
+              <p style={{ fontSize: "var(--text-sm)", color: "var(--text-1)", marginBottom: "var(--s5)" }}>
+                You can also ask questions like "What should I learn next?"
+                or "Which project should I highlight on my portfolio?" and
+                get answers grounded in your actual repositories.
               </p>
               <button
                 className="btn btn-secondary"
@@ -355,6 +361,158 @@ export default function Home() {
                 )}
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
+          ABOUT
+      ══════════════════════════════════════════ */}
+      <section className="section section-dark" id="about">
+        <div className="container">
+          <div className="section-heading">
+            <span className="section-label">About</span>
+            <h2>What is GitHub Developer Analytics?</h2>
+            <p>
+              GitHub Developer Analytics retrieves public profile and repository
+              data from the GitHub REST API and transforms it into structured
+              developer intelligence — without requiring an account or signup.
+            </p>
+          </div>
+
+          <div className="about-grid">
+
+            <div className="about-card">
+              <div className="about-card-icon">◈</div>
+              <h3>What it does</h3>
+              <p>
+                Analyzes GitHub activity and presents language distribution,
+                repository statistics, contribution patterns, and developer
+                insights in one place. With Claude AI integration, it also
+                generates a structured written analysis of your development
+                profile and answers questions about your activity.
+              </p>
+            </div>
+
+            <div className="about-card">
+              <div className="about-card-icon">◇</div>
+              <h3>Who it is for</h3>
+              <ul className="about-list">
+                <li>Developers reviewing their own progress</li>
+                <li>Students building their first portfolio</li>
+                <li>Recruiters evaluating a candidate's GitHub presence</li>
+                <li>Teams assessing a developer's public work</li>
+                <li>Anyone curious about a GitHub profile</li>
+              </ul>
+            </div>
+
+            <div className="about-card">
+              <div className="about-card-icon">▷</div>
+              <h3>Current stage</h3>
+              <p>
+                This is an early-stage open source project. The GitHub analytics
+                features are fully functional. Claude AI-powered developer
+                insights require a running API server with a valid Anthropic API
+                key — see the{" "}
+                <a
+                  href="https://github.com/isaad-ui/github-developer-analytics"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="about-link"
+                >
+                  README
+                </a>{" "}
+                for setup instructions.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
+          ROADMAP
+      ══════════════════════════════════════════ */}
+      <section className="section" id="roadmap">
+        <div className="container">
+          <div className="section-heading">
+            <span className="section-label">Roadmap</span>
+            <h2>What's built, what's next.</h2>
+            <p>
+              An honest view of where the product is today and where it is heading.
+            </p>
+          </div>
+
+          <div className="roadmap-grid">
+
+            <div className="roadmap-col">
+              <div className="roadmap-col-header roadmap-available">
+                <span className="roadmap-status-dot available" />
+                Available
+              </div>
+              <ul className="roadmap-list">
+                {[
+                  "GitHub profile analytics",
+                  "Language distribution analysis",
+                  "Repository statistics and highlights",
+                  "Top repository ranking",
+                  "Developer insight bullets",
+                  "All repositories browser with search and filters",
+                  "Multi-page app with routing",
+                  "Responsive design",
+                ].map(item => (
+                  <li key={item} className="roadmap-item">
+                    <span className="roadmap-check">✓</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="roadmap-col">
+              <div className="roadmap-col-header roadmap-indev">
+                <span className="roadmap-status-dot indev" />
+                In Development
+              </div>
+              <ul className="roadmap-list">
+                {[
+                  "Claude-powered AI Developer Insights",
+                  "Ask Your GitHub — interactive Q&A",
+                  "AI-powered developer profile summary",
+                  "Structured analysis: strengths, patterns, gaps",
+                  "Recommended next steps from Claude",
+                ].map(item => (
+                  <li key={item} className="roadmap-item">
+                    <span className="roadmap-dash">·</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="roadmap-col">
+              <div className="roadmap-col-header roadmap-future">
+                <span className="roadmap-status-dot future" />
+                Planned
+              </div>
+              <ul className="roadmap-list">
+                {[
+                  "Developer growth tracking over time",
+                  "AI portfolio analysis and recommendations",
+                  "Commit activity and contribution heatmaps",
+                  "Language analysis by lines of code",
+                  "Personalized project recommendations",
+                  "Long-term developer progress tracking",
+                  "Shareable analytics reports",
+                ].map(item => (
+                  <li key={item} className="roadmap-item">
+                    <span className="roadmap-dash">·</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
           </div>
         </div>
       </section>

@@ -1,0 +1,17 @@
+{
+  "name": "github-developer-analytics-api",
+  "version": "1.0.0",
+  "description": "Backend API server for GitHub Developer Analytics — proxies Claude AI requests",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.27.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  }
+}

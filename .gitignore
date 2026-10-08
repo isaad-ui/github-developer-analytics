@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Node / API server
+api/node_modules/
+api/.env
+
+# Frontend
+website/node_modules/
+website/dist/
+
+# Environment files — never commit secrets
+.env
+.env.local
+.env.*.local
