@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const DEMO_INSIGHTS = [
-  "Your recent activity shows a stronger level of consistency compared with earlier periods.",
-  "GitHub activity suggests you are actively working across multiple repositories.",
-  "Reviewing which projects generated the most activity helps identify areas of greatest progress.",
+  "Your top language is HTML across 56% of repositories. Diversifying into backend languages could open new project types.",
+  "11 of your 19 repositories have at least one star — a strong signal that your work is discoverable.",
+  "Your most recently updated repository was modified today, showing consistent development activity.",
 ];
 
 export default function Home() {
@@ -19,43 +19,36 @@ export default function Home() {
   }
 
   return (
-    <div className="page-home">
-
-      {/* ── HERO ── */}
+    <>
+      {/* ══════════════════════════════════════════
+          HERO
+      ══════════════════════════════════════════ */}
       <section className="hero">
-        <div className="hero-glow hero-glow-1" />
-        <div className="hero-glow hero-glow-2" />
-
         <div className="container hero-grid">
+
+          {/* Left */}
           <div className="hero-content">
             <div className="hero-eyebrow">
-              <span className="badge badge-accent">
-                <span className="badge-dot" /> Developer intelligence platform
+              <span className="hero-product-label">
+                GitHub Developer Analytics
               </span>
             </div>
 
             <h1>
-              Turn your GitHub{" "}
-              <span className="gradient-text">activity</span>{" "}
-              into real insights.
+              Understand your GitHub activity with real data.
             </h1>
 
             <p className="hero-desc">
-              GitHub Developer Analytics transforms your public GitHub profile
-              into clear, actionable developer intelligence — instantly.
+              Analyze any public GitHub profile instantly. Get language
+              breakdowns, repository statistics, contribution insights,
+              and developer intelligence — all in one place.
             </p>
 
-            {/* Inline search */}
             <form className="hero-search" onSubmit={handleSubmit}>
-              <div className="hero-search-inner">
-                <span className="hero-search-icon">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-                  </svg>
-                </span>
+              <div className="hero-search-row">
                 <input
                   type="text"
-                  className="hero-search-input"
+                  className="search-input"
                   placeholder="Enter a GitHub username…"
                   value={username}
                   onChange={e => setUsername(e.target.value)}
@@ -67,94 +60,159 @@ export default function Home() {
                   className="btn btn-primary"
                   disabled={!username.trim()}
                 >
-                  Analyze →
+                  Analyze
                 </button>
               </div>
               <p className="hero-note">
-                Free · No signup · Works with any public GitHub account
+                No account required · Works with any public GitHub profile
               </p>
             </form>
           </div>
 
-          {/* ── Mock Dashboard ── */}
+          {/* Right — realistic dashboard preview */}
           <div className="dashboard-wrapper">
             <div className="dashboard">
-              <div className="dashboard-header">
-                <div>
-                  <div className="small-label">Developer overview</div>
-                  <div className="dashboard-title">GitHub Activity</div>
-                </div>
-                <div className="status-indicator">
-                  <span className="status-dot" /> Live
+
+              {/* Title bar */}
+              <div className="db-titlebar">
+                <span className="db-title">Developer Overview</span>
+                <div className="db-live">
+                  <span className="db-live-dot" />
+                  Live data
                 </div>
               </div>
 
-              <div className="dash-stats">
-                {[["Repositories","19"],["Total Stars","11"],["Languages","4"],["Followers","29"]].map(([l, v]) => (
-                  <div key={l} className="dash-stat-card">
-                    <span>{l}</span>
-                    <strong>{v}</strong>
+              {/* Profile */}
+              <div className="db-profile">
+                <div className="db-avatar">👤</div>
+                <div>
+                  <div className="db-profile-name">isaad-ui</div>
+                  <div className="db-profile-handle">Issaka Sa-ad Timbilla</div>
+                </div>
+              </div>
+
+              {/* Stats */}
+              <div className="db-stats">
+                {[
+                  ["Repositories", "19",  false],
+                  ["Total Stars",  "11",  true ],
+                  ["Followers",    "29",  false],
+                  ["Languages",    "4",   false],
+                ].map(([label, val, accent]) => (
+                  <div key={label} className="db-stat">
+                    <div className="db-stat-label">{label}</div>
+                    <div className={`db-stat-val${accent ? " green" : ""}`}>{val}</div>
                   </div>
                 ))}
               </div>
 
-              {/* Mini language bars */}
-              <div className="dash-lang-bars">
-                {[["HTML","58%","var(--color-data-1)"],["Python","14%","var(--color-accent)"],["TypeScript","14%","var(--color-data-2)"],["JavaScript","14%","var(--color-data-3)"]].map(([l, w, c]) => (
-                  <div key={l} className="dash-lang-row">
-                    <span className="dash-lang-name">{l}</span>
-                    <div className="dash-lang-track">
-                      <div className="dash-lang-fill" style={{ width: w, background: c }} />
+              {/* Language bars */}
+              <div className="db-section">
+                <div className="db-section-title">Language Distribution</div>
+                <div className="db-lang-bars">
+                  {[
+                    ["HTML",       "56%", .56, false],
+                    ["Python",     "14%", .14, false],
+                    ["TypeScript", "14%", .14, true ],
+                    ["JavaScript", "14%", .14, true ],
+                  ].map(([lang, pct, w, muted]) => (
+                    <div key={lang} className="db-lang-row">
+                      <span className="db-lang-name">{lang}</span>
+                      <div className="db-lang-track">
+                        <div
+                          className={`db-lang-fill${muted ? " muted" : ""}`}
+                          style={{ width: `${w * 100}%` }}
+                        />
+                      </div>
+                      <span className="db-lang-pct">{pct}</span>
                     </div>
-                    <span className="dash-lang-pct">{w}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="dash-insight">
-                <div className="insight-icon-sm">✦</div>
-                <div>
-                  <div className="small-label" style={{ marginBottom: 2 }}>Insight</div>
-                  <p>HTML dominates at 66.7% of repositories.</p>
+                  ))}
                 </div>
               </div>
+
+              {/* Top repos */}
+              <div className="db-section">
+                <div className="db-section-title">Top Repositories</div>
+                <div className="db-repo-list">
+                  {[
+                    ["HTML-CSS-Project", "HTML", "★ 1"],
+                    ["html-portfilio",   "HTML", "★ 1"],
+                    ["tutorial-sdk",     "—",    "★ 0"],
+                  ].map(([name, lang, stars]) => (
+                    <div key={name} className="db-repo-item">
+                      <span className="db-repo-name">{name}</span>
+                      <div className="db-repo-meta">
+                        <span className="db-repo-lang">{lang}</span>
+                        <span>{stars}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Insight */}
+              <div className="db-insight">
+                <div className="db-insight-icon">✦</div>
+                <p>HTML is the dominant language at 56% of repositories.</p>
+              </div>
+
             </div>
           </div>
+
         </div>
       </section>
 
-      {/* ── STATS TICKER ── */}
-      <div className="stats-ticker">
-        <div className="container ticker-inner">
-          {[["10K+","Profiles Analyzed"],["50+","Languages Tracked"],["100%","Open Source"],["0","Signups Required"]].map(([n, l]) => (
-            <div key={l} className="ticker-item">
-              <strong>{n}</strong>
-              <span>{l}</span>
-            </div>
-          ))}
+      {/* ══════════════════════════════════════════
+          STATS STRIP
+      ══════════════════════════════════════════ */}
+      <div className="stats-strip">
+        <div className="container stats-strip-inner">
+          {[
+            ["GitHub REST API", "Data source"],
+            [null],
+            ["0",              "Signups required"],
+            [null],
+            ["Public",         "Open source"],
+            [null],
+            ["Real-time",      "Data fetching"],
+          ].map((item, i) =>
+            item[0] === null ? (
+              <div key={i} className="strip-divider" />
+            ) : (
+              <div key={i} className="strip-item">
+                <span className="strip-val">{item[0]}</span>
+                <span className="strip-label">{item[1]}</span>
+              </div>
+            )
+          )}
         </div>
       </div>
 
-      {/* ── FEATURES ── */}
+      {/* ══════════════════════════════════════════
+          FEATURES
+      ══════════════════════════════════════════ */}
       <section className="section" id="features">
         <div className="container">
-          <div className="section-heading centered">
+          <div className="section-heading">
             <span className="section-label">Features</span>
             <h2>Everything you need to understand your GitHub presence.</h2>
-            <p>Built on the GitHub REST API. No backend server. No data stored.</p>
+            <p>
+              Built directly on the GitHub REST API. No backend server,
+              no data stored, no account required.
+            </p>
           </div>
 
-          <div className="features-grid-3">
+          <div className="features-grid">
             {[
-              { icon: "👤", title: "Profile Analytics",    desc: "Full profile breakdown — followers, following, repositories, bio, and location." },
-              { icon: "📊", title: "Language Analysis",    desc: "Percentage breakdown of every programming language across all your repositories." },
-              { icon: "⭐", title: "Repository Stats",     desc: "Total stars, forks, largest repo, most starred, and most recently updated." },
-              { icon: "🏆", title: "Top Repositories",     desc: "Your top 5 repositories ranked by stars with descriptions and metadata." },
-              { icon: "💡", title: "Developer Insights",   desc: "Human-readable insights generated directly from your real GitHub data." },
-              { icon: "🔒", title: "Privacy First",        desc: "No account needed. Your data stays between you and GitHub's public API." },
-            ].map(({ icon, title, desc }) => (
-              <div key={title} className="feature-card-v2">
-                <div className="feature-icon">{icon}</div>
+              ["👤", "Profile Analytics",    "Full profile breakdown including followers, following, public repositories, bio, and account metadata."],
+              ["📊", "Language Analysis",    "Percentage breakdown of every programming language used across all your public repositories."],
+              ["⭐", "Repository Stats",     "Total stars, forks, largest repository, most starred project, and most recently updated repository."],
+              ["🏆", "Top Repositories",     "Your top repositories ranked by star count with descriptions, languages, and activity metadata."],
+              ["💡", "Developer Insights",   "Human-readable observations generated directly from your repository data — not generic advice."],
+              ["🔍", "All Repositories",     "Browse every repository with full-text search, sort by stars, forks, size or date, and filter by language."],
+            ].map(({ 0: icon, 1: title, 2: desc }) => (
+              <div key={title} className="feature-item">
+                <div className="feature-icon-wrap">{icon}</div>
                 <h3>{title}</h3>
                 <p>{desc}</p>
               </div>
@@ -163,65 +221,73 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── HOW IT WORKS ── */}
+      {/* ══════════════════════════════════════════
+          HOW IT WORKS
+      ══════════════════════════════════════════ */}
       <section className="section section-dark" id="how-it-works">
         <div className="container">
-          <div className="section-heading centered">
+          <div className="section-heading">
             <span className="section-label">How it works</span>
-            <h2>From username to insights in seconds.</h2>
+            <h2>From username to full analytics in seconds.</h2>
           </div>
 
-          <div className="steps-v2">
+          <div className="steps-grid">
             {[
-              { n:"01", title:"Enter username",   desc:"Type any public GitHub username into the search field on the homepage." },
-              { n:"02", title:"API fetches data",  desc:"JavaScript calls the GitHub REST API directly with pagination for all repositories." },
-              { n:"03", title:"Analytics run",     desc:"Language analysis, statistics, insights, and top repository ranking all compute instantly." },
-              { n:"04", title:"View your results", desc:"A full analytics dashboard appears — profile, charts, stats, repos, and insights." },
-            ].map(({ n, title, desc }) => (
-              <div key={n} className="step-v2">
-                <div className="step-num-v2">{n}</div>
-                <div className="step-body">
-                  <h3>{title}</h3>
-                  <p>{desc}</p>
-                </div>
+              { n:"01", title:"Enter a GitHub username", desc:"Type any public GitHub username into the search field. No authentication required for public profiles.", active:true },
+              { n:"02", title:"Data is fetched live",    desc:"The application calls the GitHub REST API directly from your browser, with automatic pagination to retrieve all repositories." },
+              { n:"03", title:"Analytics are computed",  desc:"Language percentages, statistics, insights, and repository rankings are calculated immediately from the raw API data." },
+            ].map(({ n, title, desc, active }) => (
+              <div key={n} className={`step-item${active ? " active" : ""}`}>
+                <span className="step-num">{n}</span>
+                <h3>{title}</h3>
+                <p>{desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── AI DEMO ── */}
+      {/* ══════════════════════════════════════════
+          AI INSIGHTS DEMO
+      ══════════════════════════════════════════ */}
       <section className="section" id="insights-demo">
         <div className="container">
           <div className="ai-grid">
             <div>
               <span className="section-label">Developer Insights</span>
-              <h2>Don't just see the numbers. Understand them.</h2>
+              <h2>Data you can act on, not just numbers to look at.</h2>
               <p>
-                The analytics engine generates human-readable insights from your
-                real repository data — not generic advice.
+                The analytics engine generates practical observations
+                from your real repository data — helping you understand
+                what your GitHub activity actually means.
               </p>
               <button
-                className="btn btn-primary"
-                onClick={() => setDemoIdx(Math.floor(Math.random() * DEMO_INSIGHTS.length))}
+                className="btn btn-secondary"
+                onClick={() =>
+                  setDemoIdx(i =>
+                    i === null ? 0 : (i + 1) % DEMO_INSIGHTS.length
+                  )
+                }
               >
-                Generate Example Insight →
+                Show example insight
               </button>
             </div>
 
             <div className="ai-panel">
               <div className="ai-panel-header">
-                <span className="ai-dot" /> AI Developer Analysis
+                <span className="ai-status-dot" />
+                Developer Analysis
               </div>
               <div className="ai-result">
                 {demoIdx !== null ? (
                   <div className="ai-result-text">
-                    <div className="insight-dot" style={{ marginTop: 7, flexShrink: 0 }} />
+                    <span className="ai-result-dot" />
                     <p>{DEMO_INSIGHTS[demoIdx]}</p>
                   </div>
                 ) : (
                   <p className="ai-placeholder">
-                    Click the button to generate a sample developer insight.
+                    Click "Show example insight" to see how analytics
+                    translate into actionable developer observations.
                   </p>
                 )}
               </div>
@@ -230,31 +296,38 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── CTA ── */}
-      <section className="section cta-section">
+      {/* ══════════════════════════════════════════
+          CTA
+      ══════════════════════════════════════════ */}
+      <section className="cta-section">
         <div className="container">
           <div className="cta-box">
-            <div className="cta-glow" />
             <span className="section-label">Get started</span>
-            <h2>Ready to analyze your GitHub profile?</h2>
-            <p>Enter your username above or click below — no account needed.</p>
+            <h2>Analyze any GitHub profile.</h2>
+            <p>
+              Enter any public GitHub username below. No signup, no API key,
+              no configuration required.
+            </p>
             <form className="cta-search" onSubmit={handleSubmit}>
               <input
                 type="text"
                 className="search-input"
-                placeholder="Enter GitHub username…"
+                placeholder="Enter a GitHub username…"
                 value={username}
                 onChange={e => setUsername(e.target.value)}
                 autoComplete="off"
               />
-              <button type="submit" className="btn btn-primary" disabled={!username.trim()}>
-                Analyze Profile →
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={!username.trim()}
+              >
+                Analyze →
               </button>
             </form>
           </div>
         </div>
       </section>
-
-    </div>
+    </>
   );
 }
