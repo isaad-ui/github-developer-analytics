@@ -1,10 +1,28 @@
-import { Routes, Route, Link, NavLink, useLocation } from "react-router-dom";
+import { Routes, Route, Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import Home         from "./pages/Home.jsx";
 import Analytics    from "./pages/Analytics.jsx";
 import Repositories from "./pages/Repositories.jsx";
 import NotFound     from "./pages/NotFound.jsx";
 
+function scrollTo(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+}
+
 function Navbar() {
+  const location = useLocation();
+  const isHome = location.pathname === "/";
+
+  function handleNavClick(e, id) {
+    e.preventDefault();
+    if (!isHome) {
+      // Navigate home first, then scroll after render
+      window.location.hash = "/";
+      setTimeout(() => scrollTo(id), 300);
+    } else {
+      scrollTo(id);
+    }
+  }
+
   return (
     <header className="navbar">
       <div className="container nav-content">
@@ -19,11 +37,17 @@ function Navbar() {
           <NavLink to="/" end className={({ isActive }) => isActive ? "nav-active" : ""}>
             Home
           </NavLink>
-          <a href="/#features">Features</a>
-          <a href="/#how-it-works">How it works</a>
+          <a href="#features"    onClick={e => handleNavClick(e, "features")}>Features</a>
+          <a href="#how-it-works" onClick={e => handleNavClick(e, "how-it-works")}>How it works</a>
         </nav>
 
-        <Link to="/" className="nav-cta">Try it free</Link>
+        <a
+          href="#search"
+          className="nav-cta"
+          onClick={e => handleNavClick(e, "search")}
+        >
+          Try it free
+        </a>
       </div>
     </header>
   );
