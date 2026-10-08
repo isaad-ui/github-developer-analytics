@@ -18,7 +18,6 @@ import RepoHighlights from "./components/RepoHighlights.jsx";
 import TopRepos       from "./components/TopRepos.jsx";
 import Insights       from "./components/Insights.jsx";
 
-// ─── Static demo insights for the landing section ─────────────────────────
 const DEMO_INSIGHTS = [
   "Your recent activity shows a stronger level of consistency compared with earlier periods.",
   "Your GitHub activity suggests you are actively working across multiple repositories.",
@@ -28,10 +27,9 @@ const DEMO_INSIGHTS = [
 export default function App() {
   const [loading,  setLoading]  = useState(false);
   const [error,    setError]    = useState(null);
-  const [results,  setResults]  = useState(null);   // null = no search yet
+  const [results,  setResults]  = useState(null);
   const [demoIdx,  setDemoIdx]  = useState(null);
 
-  // ── Search handler ────────────────────────────────────────────────────
   async function handleSearch(username, token) {
     setLoading(true);
     setError(null);
@@ -43,13 +41,18 @@ export default function App() {
         getRepositories(username, token),
       ]);
 
-      const languages     = analyzeLanguages(repos);
-      const stats         = calcStats(repos);
-      const insights      = calcInsights(repos);
-      const top           = topRepos(repos, 5);
-      const insightMsgs   = buildInsights(user, insights, languages, stats);
+      const languages   = analyzeLanguages(repos);
+      const stats       = calcStats(repos);
+      const insights    = calcInsights(repos);
+      const top         = topRepos(repos, 5);
+      const insightMsgs = buildInsights(user, insights, languages, stats);
 
       setResults({ user, repos, languages, stats, insights, top, insightMsgs });
+
+      // Scroll results into view after render
+      setTimeout(() => {
+        document.getElementById("results")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 80);
     } catch (err) {
       setError(
         err instanceof GitHubError
@@ -61,7 +64,6 @@ export default function App() {
     }
   }
 
-  // ── Render ───────────────────────────────────────────────────────────
   return (
     <div className="app">
 
@@ -69,15 +71,17 @@ export default function App() {
       <header className="navbar">
         <div className="container nav-content">
           <a href="#" className="logo">
-            <span className="logo-icon">⌘</span>
+            <span className="logo-icon">GH</span>
             GitHub Analytics
           </a>
+
           <nav className="nav-links">
             <a href="#features">Features</a>
             <a href="#how-it-works">How it works</a>
             <a href="#search">Analyze</a>
           </nav>
-          <a href="#search" className="nav-button">Try it</a>
+
+          <a href="#search" className="nav-cta">Try it free</a>
         </div>
       </header>
 
@@ -88,39 +92,48 @@ export default function App() {
           <div className="container hero-grid">
 
             <div className="hero-content">
-              <div className="badge">Developer intelligence platform</div>
+              <div className="hero-eyebrow">
+                <span className="badge badge-accent">Developer intelligence platform</span>
+              </div>
+
               <h1>
                 Understand your{" "}
                 <span className="hero-muted">GitHub activity.</span>
               </h1>
+
               <p className="hero-desc">
                 GitHub Developer Analytics transforms your GitHub activity into
-                clear insights about your coding habits, productivity,
-                consistency, and development progress.
+                clear insights about your coding habits, productivity, and
+                development progress.
               </p>
+
               <div className="hero-buttons">
-                <a href="#search" className="primary-button">
-                  Explore Analytics →
+                <a href="#search" className="btn btn-primary">
+                  Analyze Your Profile →
                 </a>
-                <a href="#features" className="secondary-button">
+                <a href="#features" className="btn btn-secondary">
                   Learn More
                 </a>
               </div>
+
               <p className="hero-note">
-                Built for developers who want to understand their work.
+                No signup required — works with any public GitHub account.
               </p>
             </div>
 
-            {/* Mock dashboard */}
+            {/* ── Mock Dashboard ── */}
             <div className="dashboard-wrapper">
               <div className="dashboard">
-                <div className="dashboard-top">
+                <div className="dashboard-header">
                   <div>
-                    <div className="small-label">Developer overview</div>
-                    <h3>GitHub Activity</h3>
+                    <div className="section-label" style={{ marginBottom: "4px" }}>
+                      Developer overview
+                    </div>
+                    <div className="dashboard-title">GitHub Activity</div>
                   </div>
-                  <div className="status">
-                    <span className="status-dot" /> Active
+                  <div className="status-indicator">
+                    <span className="status-dot" />
+                    Live
                   </div>
                 </div>
 
@@ -139,12 +152,12 @@ export default function App() {
                 </div>
 
                 <div className="dash-insight">
-                  <div className="insight-icon">✦</div>
+                  <div className="insight-icon-sm">✦</div>
                   <div>
-                    <span className="small-label">Developer insight</span>
-                    <p>
-                      HTML is the dominant language at 66.67% of repositories.
-                    </p>
+                    <div className="section-label" style={{ marginBottom: "4px" }}>
+                      Insight
+                    </div>
+                    <p>HTML dominates at 66.7% of repositories.</p>
                   </div>
                 </div>
               </div>
@@ -157,19 +170,24 @@ export default function App() {
         <section className="section" id="features">
           <div className="container">
             <div className="section-heading">
-              <span className="section-label">FEATURES</span>
+              <span className="section-label">Features</span>
               <h2>Turn GitHub activity into useful intelligence.</h2>
               <p>
                 Instead of simply showing contribution graphs, GitHub Developer
                 Analytics helps you understand what your activity actually means.
               </p>
             </div>
+
             <div className="features-grid">
               {[
-                ["01", "Profile Analytics",    "Retrieve followers, following, public repositories, and account info."],
-                ["02", "Language Analysis",    "See exactly which languages you use and their percentage breakdown."],
-                ["03", "Repository Statistics","Total stars, forks, largest repo, and most recently updated project."],
-                ["04", "Developer Insights",   "Human-readable explanations generated directly from your real data."],
+                ["01", "Profile Analytics",
+                  "Retrieve followers, following, public repositories, and full account information."],
+                ["02", "Language Analysis",
+                  "See exactly which languages you use across your repositories with a percentage breakdown."],
+                ["03", "Repository Statistics",
+                  "Total stars, forks, largest repository, and your most recently updated project."],
+                ["04", "Developer Insights",
+                  "Human-readable explanations generated directly from your real GitHub data."],
               ].map(([num, title, desc]) => (
                 <article key={num} className="feature-card">
                   <div className="feature-number">{num}</div>
@@ -182,17 +200,18 @@ export default function App() {
         </section>
 
         {/* ── HOW IT WORKS ── */}
-        <section className="section dark-section" id="how-it-works">
+        <section className="section section-dark" id="how-it-works">
           <div className="container">
             <div className="section-heading">
-              <span className="section-label">HOW IT WORKS</span>
-              <h2>From GitHub activity to actionable insight.</h2>
+              <span className="section-label">How it works</span>
+              <h2>From username to insights in seconds.</h2>
             </div>
+
             <div className="steps">
               {[
-                ["01", "Enter Username",   "Type any GitHub username into the search field below."],
-                ["02", "Analyze Activity", "The app calls the GitHub REST API and processes all repository data."],
-                ["03", "Get Insights",     "Real analytics are displayed instantly — no signup required."],
+                ["01", "Enter Username",    "Type any public GitHub username into the search field."],
+                ["02", "Analyze Activity",  "The app calls the GitHub REST API and processes all repository data."],
+                ["03", "Get Insights",      "Real analytics are displayed instantly — no signup required."],
               ].map(([num, title, desc]) => (
                 <div key={num} className="step">
                   <div className="step-number">{num}</div>
@@ -209,7 +228,7 @@ export default function App() {
           <div className="container">
             <div className="ai-grid">
               <div>
-                <span className="section-label">AI INSIGHTS</span>
+                <span className="section-label">Developer Insights</span>
                 <h2>Don't just see the numbers. Understand them.</h2>
                 <p>
                   Raw GitHub statistics only tell part of the story. The
@@ -217,24 +236,25 @@ export default function App() {
                   insights.
                 </p>
                 <button
-                  className="primary-button"
+                  className="btn btn-primary"
                   onClick={() =>
                     setDemoIdx(Math.floor(Math.random() * DEMO_INSIGHTS.length))
                   }
                 >
-                  Generate Example Insight →
+                  Generate Example Insight
                 </button>
               </div>
 
               <div className="ai-panel">
                 <div className="ai-panel-header">
-                  <span className="ai-dot" /> AI Developer Analysis
+                  <span className="ai-dot" />
+                  AI Developer Analysis
                 </div>
                 <div className="ai-result">
                   <p>
                     {demoIdx !== null
                       ? DEMO_INSIGHTS[demoIdx]
-                      : "Generate an example insight to see how developer analytics become readable explanations."}
+                      : "Click the button to see how developer analytics become readable explanations."}
                   </p>
                 </div>
               </div>
@@ -246,24 +266,22 @@ export default function App() {
         <section className="search-section" id="search">
           <div className="container">
             <div className="search-box">
-              <span className="section-label">GET STARTED</span>
-              <h2>Understand your development activity.</h2>
+              <span className="section-label">Get started</span>
+              <h2>Analyze any GitHub profile.</h2>
               <p>
-                Enter any GitHub username to get a full analytics breakdown —
+                Enter any public GitHub username to get a full breakdown of
                 profile, repositories, languages, statistics, and insights.
               </p>
 
               <SearchForm onSearch={handleSearch} loading={loading} />
 
-              {/* Loading */}
               {loading && (
                 <div className="loading-row">
                   <div className="spinner" />
-                  <p>Fetching GitHub data…</p>
+                  <span>Fetching GitHub data…</span>
                 </div>
               )}
 
-              {/* Error */}
               {error && (
                 <div className="error-msg" role="alert">
                   {error}
@@ -275,16 +293,14 @@ export default function App() {
 
         {/* ── RESULTS ── */}
         {results && (
-          <section className="results-section">
+          <section className="results-section" id="results">
             <div className="container results-container">
-
-              <UserProfile    user={results.user}                               />
-              <StatsGrid      stats={results.stats}    insights={results.insights} />
-              <LanguageBars   languages={results.languages}                     />
-              <RepoHighlights stats={results.stats}                             />
-              <TopRepos       repos={results.top}                               />
-              <Insights       messages={results.insightMsgs}                   />
-
+              <UserProfile    user={results.user} />
+              <StatsGrid      stats={results.stats} insights={results.insights} />
+              <LanguageBars   languages={results.languages} />
+              <RepoHighlights stats={results.stats} />
+              <TopRepos       repos={results.top} />
+              <Insights       messages={results.insightMsgs} />
             </div>
           </section>
         )}
@@ -296,10 +312,12 @@ export default function App() {
         <div className="container footer-content">
           <div>
             <a href="#" className="logo">
-              <span className="logo-icon">⌘</span>
+              <span className="logo-icon">GH</span>
               GitHub Analytics
             </a>
-            <p>Developer intelligence built from GitHub activity.</p>
+            <p className="footer-tagline">
+              Developer intelligence built from GitHub activity.
+            </p>
           </div>
           <div className="footer-right">
             © {new Date().getFullYear()} GitHub Developer Analytics

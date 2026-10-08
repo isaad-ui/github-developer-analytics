@@ -28,10 +28,10 @@ export default function SearchForm({ onSearch, loading }) {
         />
         <button
           type="submit"
-          className="primary-button"
+          className={`btn btn-primary ${loading ? "btn-loading" : ""}`}
           disabled={loading || !username.trim()}
         >
-          {loading ? "Analyzing…" : "Analyze Profile →"}
+          Analyze Profile →
         </button>
       </div>
 
