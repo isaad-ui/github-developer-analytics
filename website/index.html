@@ -462,12 +462,71 @@
                         GitHub activity into meaningful developer intelligence.
                     </p>
 
-                    <a href="#" class="primary-button">
-                        Launch Analytics
-                        <span>→</span>
-                    </a>
+                    <!-- Search Form -->
+                    <form id="searchForm" class="search-form">
+                        <input
+                            type="text"
+                            id="usernameInput"
+                            placeholder="Enter GitHub username (e.g., isaad-ui)"
+                            class="search-input"
+                            required
+                        />
+                        <button type="submit" class="primary-button">
+                            Analyze Profile
+                            <span>→</span>
+                        </button>
+                    </form>
+
+                    <div id="tokenSection" class="token-section">
+                        <details>
+                            <summary>Optional: Add GitHub Token for Higher Rate Limits</summary>
+                            <input
+                                type="password"
+                                id="tokenInput"
+                                placeholder="ghp_yourtoken..."
+                                class="token-input"
+                            />
+                            <p class="token-note">
+                                Your token is stored locally and never sent to any server except GitHub.
+                            </p>
+                        </details>
+                    </div>
+
+                    <div id="errorMessage" class="error-message" style="display: none;"></div>
+                    <div id="loadingMessage" class="loading-message" style="display: none;">
+                        <div class="spinner"></div>
+                        <p>Analyzing GitHub profile...</p>
+                    </div>
 
                 </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- RESULTS SECTION -->
+        <section id="resultsSection" class="results-section" style="display: none;">
+
+            <div class="container">
+
+                <!-- User Profile -->
+                <div id="userProfile" class="user-profile-card"></div>
+
+                <!-- Statistics Grid -->
+                <div id="statsGrid" class="results-stats-grid"></div>
+
+                <!-- Language Distribution -->
+                <div id="languageSection" class="language-section"></div>
+
+                <!-- Repository Statistics -->
+                <div id="repositoryStats" class="repository-stats"></div>
+
+                <!-- Top Repositories -->
+                <div id="topRepositories" class="top-repositories-section"></div>
+
+                <!-- Insights -->
+                <div id="insightsSection" class="insights-section"></div>
 
             </div>
 
