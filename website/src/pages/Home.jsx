@@ -1,5 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  getUserData, getRepositories,
+  analyzeLanguages, calcStats, calcInsights,
+} from "../api.js";
 
 const DEMO_INSIGHTS = [
   "Your top language is HTML across 56% of repositories. Diversifying into backend languages could open new project types.",
@@ -11,6 +15,31 @@ export default function Home() {
   const [username, setUsername] = useState("");
   const [demoIdx,  setDemoIdx]  = useState(null);
   const navigate = useNavigate();
+
+  // Live demo data — fetches real isaad-ui profile
+  const [demo, setDemo] = useState(null);
+
+  useEffect(() => {
+    async function loadDemo() {
+      try {
+        const [user, repos] = await Promise.all([
+          getUserData("isaad-ui", ""),
+          getRepositories("isaad-ui", ""),
+        ]);
+        const languages = analyzeLanguages(repos);
+        const stats     = calcStats(repos);
+        const insights  = calcInsights(repos);
+        // Top 3 repos by stars
+        const top3 = [...repos]
+          .sort((a, b) => b.stargazers_count - a.stargazers_count)
+          .slice(0, 3);
+        setDemo({ user, languages, stats, insights, top3 });
+      } catch {
+        // silently fall back — no demo data shown if API fails
+      }
+    }
+    loadDemo();
+  }, []);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -69,7 +98,7 @@ export default function Home() {
             </form>
           </div>
 
-          {/* Right — realistic dashboard preview */}
+          {/* Right — live dashboard preview */}
           <div className="dashboard-wrapper">
             <div className="dashboard">
 
@@ -78,83 +107,117 @@ export default function Home() {
                 <span className="db-title">Developer Overview</span>
                 <div className="db-live">
                   <span className="db-live-dot" />
-                  Live data
+                  {demo ? "Live data" : "Loading…"}
                 </div>
               </div>
 
-              {/* Profile */}
-              <div className="db-profile">
-                <div className="db-avatar">👤</div>
-                <div>
-                  <div className="db-profile-name">isaad-ui</div>
-                  <div className="db-profile-handle">Issaka Sa-ad Timbilla</div>
-                </div>
-              </div>
-
-              {/* Stats */}
-              <div className="db-stats">
-                {[
-                  ["Repositories", "19",  false],
-                  ["Total Stars",  "11",  true ],
-                  ["Followers",    "29",  false],
-                  ["Languages",    "4",   false],
-                ].map(([label, val, accent]) => (
-                  <div key={label} className="db-stat">
-                    <div className="db-stat-label">{label}</div>
-                    <div className={`db-stat-val${accent ? " green" : ""}`}>{val}</div>
+              {demo ? (
+                <>
+                  {/* Profile */}
+                  <div className="db-profile">
+                    <img
+                      src={demo.user.avatar_url}
+                      alt=""
+                      className="db-avatar-img"
+                    />
+                    <div>
+                      <div className="db-profile-name">{demo.user.login}</div>
+                      <div className="db-profile-handle">{demo.user.name || ""}</div>
+                    </div>
                   </div>
-                ))}
-              </div>
 
-              {/* Language bars */}
-              <div className="db-section">
-                <div className="db-section-title">Language Distribution</div>
-                <div className="db-lang-bars">
-                  {[
-                    ["HTML",       "56%", .56, false],
-                    ["Python",     "14%", .14, false],
-                    ["TypeScript", "14%", .14, true ],
-                    ["JavaScript", "14%", .14, true ],
-                  ].map(([lang, pct, w, muted]) => (
-                    <div key={lang} className="db-lang-row">
-                      <span className="db-lang-name">{lang}</span>
-                      <div className="db-lang-track">
-                        <div
-                          className={`db-lang-fill${muted ? " muted" : ""}`}
-                          style={{ width: `${w * 100}%` }}
-                        />
+                  {/* Stats */}
+                  <div className="db-stats">
+                    {[
+                      ["Repositories", demo.user.public_repos, false],
+                      ["Total Stars",  demo.stats.totalStars,  true ],
+                      ["Followers",    demo.user.followers,    false],
+                      ["Languages",    Object.keys(demo.languages).length, false],
+                    ].map(([label, val, accent]) => (
+                      <div key={label} className="db-stat">
+                        <div className="db-stat-label">{label}</div>
+                        <div className={`db-stat-val${accent ? " green" : ""}`}>{val}</div>
                       </div>
-                      <span className="db-lang-pct">{pct}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                    ))}
+                  </div>
 
-              {/* Top repos */}
-              <div className="db-section">
-                <div className="db-section-title">Top Repositories</div>
-                <div className="db-repo-list">
-                  {[
-                    ["HTML-CSS-Project", "HTML", "★ 1"],
-                    ["html-portfilio",   "HTML", "★ 1"],
-                    ["tutorial-sdk",     "—",    "★ 0"],
-                  ].map(([name, lang, stars]) => (
-                    <div key={name} className="db-repo-item">
-                      <span className="db-repo-name">{name}</span>
-                      <div className="db-repo-meta">
-                        <span className="db-repo-lang">{lang}</span>
-                        <span>{stars}</span>
+                  {/* Language bars */}
+                  <div className="db-section">
+                    <div className="db-section-title">Language Distribution</div>
+                    <div className="db-lang-bars">
+                      {Object.entries(demo.languages).slice(0, 4).map(([lang, pct], i) => (
+                        <div key={lang} className="db-lang-row">
+                          <span className="db-lang-name">{lang}</span>
+                          <div className="db-lang-track">
+                            <div
+                              className={`db-lang-fill${i > 0 ? " muted" : ""}`}
+                              style={{ width: `${pct}%` }}
+                            />
+                          </div>
+                          <span className="db-lang-pct">{pct.toFixed(0)}%</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Top repos */}
+                  <div className="db-section">
+                    <div className="db-section-title">Top Repositories</div>
+                    <div className="db-repo-list">
+                      {demo.top3.map(repo => (
+                        <div key={repo.id} className="db-repo-item">
+                          <span className="db-repo-name">{repo.name}</span>
+                          <div className="db-repo-meta">
+                            {repo.language && (
+                              <span className="db-repo-lang">{repo.language}</span>
+                            )}
+                            <span>★ {repo.stargazers_count}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Insight */}
+                  <div className="db-insight">
+                    <div className="db-insight-icon">✦</div>
+                    <p>
+                      {Object.keys(demo.languages)[0]
+                        ? `${Object.keys(demo.languages)[0]} is the top language at ${Object.values(demo.languages)[0].toFixed(0)}% of repositories.`
+                        : "Analyzing language distribution across repositories."}
+                    </p>
+                  </div>
+                </>
+              ) : (
+                /* Loading skeleton */
+                <div className="db-skeleton">
+                  <div className="db-skeleton-profile">
+                    <div className="skeleton-circle" />
+                    <div className="skeleton-lines">
+                      <div className="skeleton-line w60" />
+                      <div className="skeleton-line w40" />
+                    </div>
+                  </div>
+                  <div className="db-stats">
+                    {[1,2,3,4].map(i => (
+                      <div key={i} className="db-stat">
+                        <div className="skeleton-line w50 mb1" />
+                        <div className="skeleton-line w30 tall" />
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+                  <div className="db-section">
+                    <div className="skeleton-line w40 mb2" />
+                    {[80,60,45,35].map(w => (
+                      <div key={w} className="db-lang-row">
+                        <div className="skeleton-line" style={{ width: 60 }} />
+                        <div className="skeleton-line" style={{ flex:1 }} />
+                        <div className="skeleton-line" style={{ width: 28 }} />
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-
-              {/* Insight */}
-              <div className="db-insight">
-                <div className="db-insight-icon">✦</div>
-                <p>HTML is the dominant language at 56% of repositories.</p>
-              </div>
+              )}
 
             </div>
           </div>

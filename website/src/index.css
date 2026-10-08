@@ -853,3 +853,62 @@ footer {
   .analytics-footer-cta { flex-direction:column; }
   .db-stats          { grid-template-columns:repeat(2,1fr); }
 }
+
+/* ============================================================
+   DASHBOARD — live avatar + skeleton
+============================================================ */
+.db-avatar-img {
+  width: 32px; height: 32px;
+  border-radius: var(--r-full);
+  border: 1px solid var(--border-0);
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+/* Skeleton shimmer */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+.skeleton-line,
+.skeleton-circle {
+  background: linear-gradient(
+    90deg,
+    var(--bg-2) 25%,
+    var(--bg-3) 50%,
+    var(--bg-2) 75%
+  );
+  background-size: 400px 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: var(--r-sm);
+}
+.skeleton-circle {
+  width: 32px; height: 32px;
+  border-radius: var(--r-full);
+  flex-shrink: 0;
+}
+.skeleton-line { height: 10px; width: 100%; }
+.skeleton-line.w60 { width: 60%; }
+.skeleton-line.w50 { width: 50%; }
+.skeleton-line.w40 { width: 40%; }
+.skeleton-line.w30 { width: 30%; }
+.skeleton-line.tall { height: 22px; border-radius: var(--r-md); }
+.skeleton-line.mb1  { margin-bottom: 6px; }
+.skeleton-line.mb2  { margin-bottom: 10px; }
+
+.db-skeleton-profile {
+  display: flex; align-items: center;
+  gap: var(--s3); padding: var(--s3) var(--s4);
+  border-bottom: 1px solid var(--border-1);
+}
+.skeleton-lines {
+  display: flex; flex-direction: column;
+  gap: 6px; flex: 1;
+}
+.db-skeleton .db-stats .db-stat {
+  display: flex; flex-direction: column; gap: 6px;
+}
+.db-skeleton .db-section .db-lang-row {
+  display: flex; align-items: center;
+  gap: var(--s3); margin-bottom: var(--s2);
+}
