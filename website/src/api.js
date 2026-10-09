@@ -205,3 +205,35 @@ export function formatDate(iso) {
     year: "numeric",
   });
 }
+
+// Extract a GitHub username from either a plain username or a GitHub URL.
+// Handles:
+//   isaad-ui
+//   https://github.com/isaad-ui
+//   https://github.com/isaad-ui/some-repo
+//   github.com/isaad-ui
+export function extractUsername(input) {
+  if (!input) return "";
+  const trimmed = input.trim();
+
+  // If it contains "github.com", parse it as a URL
+  if (trimmed.includes("github.com")) {
+    try {
+      // Ensure it has a protocol so URL() can parse it
+      const url = new URL(
+        trimmed.startsWith("http") ? trimmed : `https://${trimmed}`
+      );
+      // pathname looks like "/isaad-ui" or "/isaad-ui/repo"
+      const parts = url.pathname.split("/").filter(Boolean);
+      return parts[0] || "";
+    } catch {
+      // Fallback: split on "/" and take the part after "github.com"
+      const parts = trimmed.split("/").filter(Boolean);
+      const idx = parts.findIndex(p => p.includes("github.com"));
+      return parts[idx + 1] || "";
+    }
+  }
+
+  // Plain username — return as-is (trim any trailing slashes)
+  return trimmed.replace(/\/+$/, "");
+}

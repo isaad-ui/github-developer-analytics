@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   getUserData, getRepositories,
-  analyzeLanguages, calcStats, calcInsights,
+  analyzeLanguages, calcStats, calcInsights, extractUsername,
 } from "../api.js";
 
 const DEMO_INSIGHTS = [
@@ -43,7 +43,7 @@ export default function Home() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    const u = username.trim();
+    const u = extractUsername(username);
     if (u) navigate(`/analytics/${u}`);
   }
 
@@ -78,7 +78,7 @@ export default function Home() {
                 <input
                   type="text"
                   className="search-input"
-                  placeholder="Enter a GitHub username…"
+                  placeholder="Username or github.com/username…"
                   value={username}
                   onChange={e => setUsername(e.target.value)}
                   autoComplete="off"
@@ -93,7 +93,7 @@ export default function Home() {
                 </button>
               </div>
               <p className="hero-note">
-                No account required · Works with any public GitHub profile
+                No account required · Enter a username or paste a GitHub profile URL
               </p>
             </form>
           </div>
@@ -533,7 +533,7 @@ export default function Home() {
               <input
                 type="text"
                 className="search-input"
-                placeholder="Enter a GitHub username…"
+                placeholder="Username or github.com/username…"
                 value={username}
                 onChange={e => setUsername(e.target.value)}
                 autoComplete="off"
