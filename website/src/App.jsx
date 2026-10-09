@@ -28,7 +28,7 @@ function Navbar() {
       <div className="container nav-content">
         <Link to="/" className="logo">
           <span className="logo-icon">
-            <img src="/github-developer-analytics/logo.svg" alt="GitHub Analytics logo" />
+            <img src="/logo.svg" alt="GitHub Analytics logo" />
           </span>
           GitHub Analytics
         </Link>
@@ -60,7 +60,7 @@ function Footer() {
         <div>
           <Link to="/" className="logo">
             <span className="logo-icon">
-              <img src="/github-developer-analytics/logo.svg" alt="GitHub Analytics logo" />
+              <img src="/logo.svg" alt="GitHub Analytics logo" />
             </span>
             GitHub Analytics
           </Link>
