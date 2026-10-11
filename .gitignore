@@ -1,17 +1,26 @@
 # Python
 __pycache__/
 *.pyc
-*.pyo
+venv/
+.venv/
+*.egg-info/
+build/
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
 
-# Node / API server
-api/node_modules/
-api/.env
-
-# Frontend
-website/node_modules/
+# Node (API server and frontend)
+node_modules/
 website/dist/
 
-# Environment files — never commit secrets
+# Environment files - never commit secrets
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+*.log

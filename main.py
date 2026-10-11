@@ -1,5 +1,6 @@
 import os
 import requests
+from retry_logic import request_with_retry
 
 
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
@@ -15,7 +16,9 @@ if GITHUB_TOKEN:
 def get_user_data(user_name):
     url = f"https://api.github.com/users/{user_name}"
 
-    response = requests.get(url, headers=headers)
+    response = request_with_retry(url, headers=headers)
+
+    assert response is not None, "Request failed after retries."
 
     if response.status_code == 404:
         print("User not found.")
@@ -38,11 +41,9 @@ def get_repositories(user_name):
             "page": page
         }
 
-        response = requests.get(
-            url,
-            params=params,
-            headers=headers
-        )
+        response = request_with_retry(url, params=params, headers=headers)
+
+        assert response is not None, "Request failed after retries."
 
         response.raise_for_status()
 
@@ -52,6 +53,9 @@ def get_repositories(user_name):
             break
 
         repos.extend(data)
+
+        if len(data) < 100:
+            break
 
         page += 1
 
