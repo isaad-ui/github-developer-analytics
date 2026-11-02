@@ -1,6 +1,6 @@
 # GitHub Developer Analytics
 
-A developer intelligence platform that analyzes any public GitHub profile and transforms the data into actionable insights — powered by the GitHub REST API and Claude AI.
+A developer analytics platform that analyzes any public GitHub profile and transforms the data into actionable insights — powered by the GitHub REST API.
 
 ---
 
@@ -12,16 +12,14 @@ A developer intelligence platform that analyzes any public GitHub profile and tr
 
 ## What It Does
 
-Enter any public GitHub username and get an instant analytics dashboard covering:
+Enter any public GitHub username or profile URL and get an instant analytics dashboard:
 
 - **Profile** — avatar, bio, followers, following, public repository count
-- **Language distribution** — percentage breakdown of every language used across all repositories
+- **Language distribution** — percentage breakdown of every language across all repositories
 - **Repository statistics** — total stars, forks, largest repo, most starred, most recently updated
 - **Top repositories** — ranked by stars with descriptions, languages, and activity
-- **Developer insights** — data-driven observations generated from real repository data
-- **All repositories** — full browser with search, sort (stars, forks, size, date), and language filter
-- **AI Developer Insights** — Claude analyzes your GitHub activity and produces a structured report covering technical strengths, development patterns, areas to improve, and recommended next steps
-- **Ask Your GitHub** — ask any question about your GitHub activity and get an answer grounded in your real data
+- **Developer insights** — data-driven observations from real repository data
+- **All repositories** — full browser with search, sort, and language filter
 
 ---
 
@@ -34,23 +32,14 @@ github-developer-analytics/
 │   └── workflows/
 │       └── deploy-site.yml       # GitHub Actions — builds and deploys frontend
 │
-├── api/
-│   ├── server.js                 # Express API server — proxies Claude AI requests
-│   ├── package.json
-│   ├── .env.example              # Environment variable template
-│   ├── .gitignore
-│   └── README.md                 # Full API setup and deployment guide
-│
 ├── website/
 │   ├── public/
 │   │   ├── logo.svg              # App logo
 │   │   └── _redirects            # Netlify SPA routing
 │   ├── src/
-│   │   ├── components/           # React components
-│   │   │   ├── AIInsights.jsx    # Claude-powered developer analysis
-│   │   │   ├── AskGitHub.jsx     # Interactive Q&A
-│   │   │   ├── Insights.jsx      # Data-driven insight bullets
-│   │   │   ├── LanguageBars.jsx  # Language distribution chart
+│   │   ├── components/
+│   │   │   ├── Insights.jsx
+│   │   │   ├── LanguageBars.jsx
 │   │   │   ├── RepoHighlights.jsx
 │   │   │   ├── SearchForm.jsx
 │   │   │   ├── StatsGrid.jsx
@@ -61,10 +50,10 @@ github-developer-analytics/
 │   │   │   ├── Home.jsx          # Landing page
 │   │   │   ├── NotFound.jsx      # 404 page
 │   │   │   └── Repositories.jsx  # All repositories browser
-│   │   ├── App.jsx               # Router + navbar + footer
+│   │   ├── App.jsx
 │   │   ├── api.js                # GitHub API calls + analytics logic
-│   │   ├── index.css             # Design system + all styles
-│   │   └── main.jsx              # React entry point
+│   │   ├── index.css
+│   │   └── main.jsx
 │   ├── index.html
 │   ├── package.json
 │   └── vite.config.js
@@ -76,27 +65,7 @@ github-developer-analytics/
 
 ---
 
-## Architecture
-
-```
-Browser
-  │
-  ├── GitHub REST API (direct)
-  │     └── Profile, repositories, languages, stats
-  │
-  └── API Server (api/)
-        └── POST /api/insights  →  Claude AI analysis
-        └── POST /api/ask       →  Claude AI Q&A
-```
-
-The frontend calls the GitHub REST API directly from the browser.
-All Claude AI requests go through the Express API server to keep the Anthropic API key server-side.
-
----
-
 ## Running Locally
-
-### Frontend
 
 ```bash
 cd website
@@ -104,67 +73,50 @@ npm install
 npm run dev
 ```
 
-Opens at `http://localhost:5173`. GitHub analytics work immediately without any configuration.
+Opens at `http://localhost:5173`. All analytics work immediately — no configuration needed.
 
-### API Server (for AI features)
+---
 
-```bash
-cd api
-npm install
-cp .env.example .env
-# Edit .env and add your ANTHROPIC_API_KEY
-npm start
-```
+## Input Formats
 
-Runs on `http://localhost:3001`. The frontend automatically connects to it.
+The search accepts both:
 
-See `api/README.md` for full setup instructions.
+- Plain username: `isaad-ui`
+- GitHub profile URL: `https://github.com/isaad-ui`
+- Repository URL: `https://github.com/isaad-ui/some-repo` (extracts the username)
 
-### Python Terminal Version
+---
+
+## Python Terminal Version
 
 ```bash
 pip install requests
 python main.py
 ```
 
-Enter any GitHub username when prompted.
+Enter any GitHub username when prompted. Outputs profile, languages, repository statistics, insights, and top repositories in the terminal.
 
 ---
 
 ## Deployment
 
-### Frontend — Netlify
+Deployed automatically to **Netlify** via `netlify.toml` on every push to `main`.
 
-Deployed automatically via `netlify.toml` when changes are pushed to `main`.
-
-Build settings (defined in `netlify.toml`):
+Build settings (from `netlify.toml`):
 - Base: `website`
 - Build command: `npm run build`
 - Publish: `dist`
 
-Set the `VITE_API_URL` environment variable in Netlify to point to your deployed API server.
-
-### API Server — Render
-
-The `api/` folder is deployed as a Node.js web service on Render.
-
-Required environment variables:
-- `ANTHROPIC_API_KEY` — your Anthropic API key
-- `ALLOWED_ORIGINS` — `https://github-developer-analytics.netlify.app`
-
-See `api/README.md` for step-by-step Render deployment instructions.
-
 ---
 
-## Environment Variables
+## GitHub API Rate Limits
 
-| Variable | Location | Purpose |
-|---|---|---|
-| `ANTHROPIC_API_KEY` | `api/.env` / Render | Anthropic Claude API key |
-| `ALLOWED_ORIGINS` | `api/.env` / Render | Allowed frontend origins for CORS |
-| `VITE_API_URL` | Netlify env vars | URL of the deployed API server |
+| Situation | Limit |
+|---|---|
+| No token (unauthenticated) | 60 requests/hour |
+| With a personal access token | 5,000 requests/hour |
 
-**Never commit API keys to the repository.**
+To use a token, expand the optional token field on the website before searching.
 
 ---
 
@@ -175,12 +127,9 @@ See `api/README.md` for step-by-step Render deployment instructions.
 | React 18 | Frontend framework |
 | Vite | Build tool |
 | React Router | Client-side routing |
-| GitHub REST API | Developer data source |
-| Anthropic Claude | AI developer analysis |
-| Express | API server |
-| Netlify | Frontend hosting |
-| Render | API server hosting |
-| GitHub Actions | CI/CD pipeline |
+| GitHub REST API | Data source |
+| Netlify | Hosting |
+| GitHub Actions | CI/CD |
 | Python + requests | Terminal analytics tool |
 
 ---
@@ -189,29 +138,9 @@ See `api/README.md` for step-by-step Render deployment instructions.
 
 | Route | Description |
 |---|---|
-| `/` | Landing page — hero, features, how it works, about, roadmap |
-| `/analytics/:username` | Full analytics dashboard + AI insights |
+| `/` | Landing page |
+| `/analytics/:username` | Full analytics dashboard |
 | `/repos/:username` | All repositories with search and filters |
-
----
-
-## API Endpoints
-
-| Method | Endpoint | Description |
-|---|---|---|
-| `POST` | `/api/insights` | Generate full AI developer analysis |
-| `POST` | `/api/ask` | Answer a question about GitHub data |
-| `GET` | `/api/health` | Health check + AI availability status |
-
----
-
-## Security
-
-- Anthropic API key is never exposed to the browser
-- GitHub tokens are optional and stored only in the browser session
-- User questions are validated and limited to 500 characters
-- CORS is restricted to allowed origins
-- If the AI service is unavailable, all GitHub analytics continue working normally
 
 ---
 
@@ -219,14 +148,12 @@ See `api/README.md` for step-by-step Render deployment instructions.
 
 | Feature | Status |
 |---|---|
-| GitHub profile analytics | ✅ Live |
-| Language distribution | ✅ Live |
-| Repository statistics | ✅ Live |
-| Top repositories | ✅ Live |
-| All repositories browser | ✅ Live |
-| Multi-page React app | ✅ Live |
-| Netlify deployment | ✅ Live |
-| API server (Render) | ✅ Live |
-| AI Developer Insights (Claude) | ⏳ Requires Anthropic credits |
-| Ask Your GitHub (Claude) | ⏳ Requires Anthropic credits |
-| Python terminal tool | ✅ Working |
+| GitHub profile analytics | Live |
+| Language distribution | Live |
+| Repository statistics | Live |
+| Top repositories | Live |
+| All repositories browser | Live |
+| Multi-page React app | Live |
+| Netlify deployment | Live |
+| GitHub URL input support | Live |
+| Python terminal tool | Working |
