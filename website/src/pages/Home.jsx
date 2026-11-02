@@ -5,15 +5,8 @@ import {
   analyzeLanguages, calcStats, calcInsights, extractUsername,
 } from "../api.js";
 
-const DEMO_INSIGHTS = [
-  "Your top language is HTML across 56% of repositories. Diversifying into backend languages could open new project types.",
-  "11 of your 19 repositories have at least one star — a strong signal that your work is discoverable.",
-  "Your most recently updated repository was modified today, showing consistent development activity.",
-];
-
 export default function Home() {
   const [username, setUsername] = useState("");
-  const [demoIdx,  setDemoIdx]  = useState(null);
   const navigate = useNavigate();
 
   // Live demo data — fetches real isaad-ui profile
@@ -29,13 +22,12 @@ export default function Home() {
         const languages = analyzeLanguages(repos);
         const stats     = calcStats(repos);
         const insights  = calcInsights(repos);
-        // Top 3 repos by stars
         const top3 = [...repos]
           .sort((a, b) => b.stargazers_count - a.stargazers_count)
           .slice(0, 3);
         setDemo({ user, languages, stats, insights, top3 });
       } catch {
-        // silently fall back — no demo data shown if API fails
+        // silently fall back
       }
     }
     loadDemo();
@@ -102,7 +94,6 @@ export default function Home() {
           <div className="dashboard-wrapper">
             <div className="dashboard">
 
-              {/* Title bar */}
               <div className="db-titlebar">
                 <span className="db-title">Developer Overview</span>
                 <div className="db-live">
@@ -113,7 +104,6 @@ export default function Home() {
 
               {demo ? (
                 <>
-                  {/* Profile */}
                   <div className="db-profile">
                     <img
                       src={demo.user.avatar_url}
@@ -126,7 +116,6 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* Stats */}
                   <div className="db-stats">
                     {[
                       ["Repositories", demo.user.public_repos, false],
@@ -141,7 +130,6 @@ export default function Home() {
                     ))}
                   </div>
 
-                  {/* Language bars */}
                   <div className="db-section">
                     <div className="db-section-title">Language Distribution</div>
                     <div className="db-lang-bars">
@@ -160,7 +148,6 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* Top repos */}
                   <div className="db-section">
                     <div className="db-section-title">Top Repositories</div>
                     <div className="db-repo-list">
@@ -178,7 +165,6 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* Insight */}
                   <div className="db-insight">
                     <div className="db-insight-icon">✦</div>
                     <p>
@@ -189,7 +175,6 @@ export default function Home() {
                   </div>
                 </>
               ) : (
-                /* Loading skeleton */
                 <div className="db-skeleton">
                   <div className="db-skeleton-profile">
                     <div className="skeleton-circle" />
@@ -296,7 +281,7 @@ export default function Home() {
 
           <div className="steps-grid">
             {[
-              { n:"01", title:"Enter a GitHub username", desc:"Type any public GitHub username into the search field. No authentication required for public profiles.", active:true },
+              { n:"01", title:"Enter a GitHub username", desc:"Type any public GitHub username or paste a github.com profile URL. No authentication required.", active:true },
               { n:"02", title:"Data is fetched live",    desc:"The application calls the GitHub REST API directly from your browser, with automatic pagination to retrieve all repositories." },
               { n:"03", title:"Analytics are computed",  desc:"Language percentages, statistics, insights, and repository rankings are calculated immediately from the raw API data." },
             ].map(({ n, title, desc, active }) => (
@@ -311,64 +296,9 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════════
-          AI INSIGHTS DEMO
-      ══════════════════════════════════════════ */}
-      <section className="section" id="insights-demo">
-        <div className="container">
-          <div className="ai-grid">
-            <div>
-              <span className="section-label">Developer Insights</span>
-              <h2>Data you can act on, not just numbers to look at.</h2>
-              <p>
-                Once you analyze a profile, Claude AI generates a structured
-                written report covering your technical strengths, development
-                patterns, areas to improve, and practical next steps — based
-                only on your real GitHub data.
-              </p>
-              <p style={{ fontSize: "var(--text-sm)", color: "var(--text-1)", marginBottom: "var(--s5)" }}>
-                You can also ask questions like "What should I learn next?"
-                or "Which project should I highlight on my portfolio?" and
-                get answers grounded in your actual repositories.
-              </p>
-              <button
-                className="btn btn-secondary"
-                onClick={() =>
-                  setDemoIdx(i =>
-                    i === null ? 0 : (i + 1) % DEMO_INSIGHTS.length
-                  )
-                }
-              >
-                Show example insight
-              </button>
-            </div>
-
-            <div className="ai-panel">
-              <div className="ai-panel-header">
-                <span className="ai-status-dot" />
-                Developer Analysis
-              </div>
-              <div className="ai-result">
-                {demoIdx !== null ? (
-                  <div className="ai-result-text">
-                    <span className="ai-result-dot" />
-                    <p>{DEMO_INSIGHTS[demoIdx]}</p>
-                  </div>
-                ) : (
-                  <p className="ai-placeholder">
-                    Click "Show example insight" to see how analytics
-                    translate into actionable developer observations.
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════
           ABOUT
       ══════════════════════════════════════════ */}
-      <section className="section section-dark" id="about">
+      <section className="section" id="about">
         <div className="container">
           <div className="section-heading">
             <span className="section-label">About</span>
@@ -388,9 +318,7 @@ export default function Home() {
               <p>
                 Analyzes GitHub activity and presents language distribution,
                 repository statistics, contribution patterns, and developer
-                insights in one place. With Claude AI integration, it also
-                generates a structured written analysis of your development
-                profile and answers questions about your activity.
+                insights in one place — instantly, from any public GitHub profile.
               </p>
             </div>
 
@@ -410,19 +338,9 @@ export default function Home() {
               <div className="about-card-icon">▷</div>
               <h3>Current stage</h3>
               <p>
-                This is an early-stage open source project. The GitHub analytics
-                features are fully functional. Claude AI-powered developer
-                insights require a running API server with a valid Anthropic API
-                key — see the{" "}
-                <a
-                  href="https://github.com/isaad-ui/github-developer-analytics"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="about-link"
-                >
-                  README
-                </a>{" "}
-                for setup instructions.
+                This is an early-stage open source project. All GitHub analytics
+                features are fully functional and work directly in the browser
+                using the public GitHub REST API. No signup or configuration required.
               </p>
             </div>
 
@@ -433,14 +351,12 @@ export default function Home() {
       {/* ══════════════════════════════════════════
           ROADMAP
       ══════════════════════════════════════════ */}
-      <section className="section" id="roadmap">
+      <section className="section section-dark" id="roadmap">
         <div className="container">
           <div className="section-heading">
             <span className="section-label">Roadmap</span>
             <h2>What's built, what's next.</h2>
-            <p>
-              An honest view of where the product is today and where it is heading.
-            </p>
+            <p>An honest view of where the product is today and where it is heading.</p>
           </div>
 
           <div className="roadmap-grid">
@@ -460,6 +376,7 @@ export default function Home() {
                   "All repositories browser with search and filters",
                   "Multi-page app with routing",
                   "Responsive design",
+                  "GitHub URL input support",
                 ].map(item => (
                   <li key={item} className="roadmap-item">
                     <span className="roadmap-check">✓</span>
@@ -476,11 +393,11 @@ export default function Home() {
               </div>
               <ul className="roadmap-list">
                 {[
-                  "Claude-powered AI Developer Insights",
-                  "Ask Your GitHub — interactive Q&A",
-                  "AI-powered developer profile summary",
-                  "Structured analysis: strengths, patterns, gaps",
-                  "Recommended next steps from Claude",
+                  "Commit activity analysis",
+                  "Contribution heatmap",
+                  "Repository activity trends",
+                  "Shareable analytics reports",
+                  "Language analysis by lines of code",
                 ].map(item => (
                   <li key={item} className="roadmap-item">
                     <span className="roadmap-dash">·</span>
@@ -498,12 +415,11 @@ export default function Home() {
               <ul className="roadmap-list">
                 {[
                   "Developer growth tracking over time",
-                  "AI portfolio analysis and recommendations",
-                  "Commit activity and contribution heatmaps",
-                  "Language analysis by lines of code",
+                  "Portfolio analysis and recommendations",
+                  "Stars and forks over time charts",
                   "Personalized project recommendations",
                   "Long-term developer progress tracking",
-                  "Shareable analytics reports",
+                  "Compare two GitHub profiles",
                 ].map(item => (
                   <li key={item} className="roadmap-item">
                     <span className="roadmap-dash">·</span>
