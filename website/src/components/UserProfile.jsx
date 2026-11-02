@@ -1,6 +1,6 @@
 export default function UserProfile({ user }) {
   return (
-    <div className="card profile-card">
+    <div className="section-block profile-card">
       <div className="profile-header">
         <img
           src={user.avatar_url}
@@ -17,9 +17,11 @@ export default function UserProfile({ user }) {
           >
             @{user.login}
           </a>
-          {user.bio && <p className="profile-bio">{user.bio}</p>}
+          {user.bio && (
+            <p className="profile-bio">{user.bio}</p>
+          )}
           {user.location && (
-            <p className="profile-location">📍 {user.location}</p>
+            <p className="profile-location">{user.location}</p>
           )}
         </div>
       </div>

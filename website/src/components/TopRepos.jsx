@@ -31,23 +31,19 @@ export default function TopRepos({ repos, username }) {
             className="repo-card"
           >
             <div className="repo-card-top">
-              <span className="repo-rank">{String(i + 1).padStart(2, "0")}</span>
+              <span className="repo-rank mono">{String(i + 1).padStart(2, "0")}</span>
               <span className="repo-name">{repo.name}</span>
             </div>
-
-            <p className={`repo-desc ${!repo.description ? "repo-no-desc" : ""}`}>
+            <p className={`repo-desc${!repo.description ? " repo-no-desc" : ""}`}>
               {repo.description || "No description"}
             </p>
-
             <div className="repo-meta">
               {repo.language && (
                 <span className="repo-lang">{repo.language}</span>
               )}
               <span className="repo-stars">★ {repo.stargazers_count}</span>
               <span className="repo-forks">⑂ {repo.forks_count}</span>
-              <span className="repo-updated">
-                Updated {formatDate(repo.updated_at)}
-              </span>
+              <span className="repo-updated">Updated {formatDate(repo.updated_at)}</span>
             </div>
           </a>
         ))}

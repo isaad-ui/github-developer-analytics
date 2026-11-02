@@ -1,4 +1,4 @@
-import { Routes, Route, Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Routes, Route, Link, NavLink, useLocation } from "react-router-dom";
 import Home         from "./pages/Home.jsx";
 import Analytics    from "./pages/Analytics.jsx";
 import Repositories from "./pages/Repositories.jsx";
@@ -9,13 +9,12 @@ function scrollTo(id) {
 }
 
 function Navbar() {
-  const location = useLocation();
-  const isHome = location.pathname === "/";
+  const { pathname } = useLocation();
+  const isHome = pathname === "/";
 
   function handleNavClick(e, id) {
     e.preventDefault();
     if (!isHome) {
-      // Navigate home first, then scroll after render
       window.location.hash = "/";
       setTimeout(() => scrollTo(id), 300);
     } else {
@@ -28,7 +27,7 @@ function Navbar() {
       <div className="container nav-content">
         <Link to="/" className="logo">
           <span className="logo-icon">
-            <img src="/logo.svg" alt="GitHub Analytics logo" />
+            <img src="/logo.svg" alt="" />
           </span>
           GitHub Analytics
         </Link>
@@ -37,15 +36,11 @@ function Navbar() {
           <NavLink to="/" end className={({ isActive }) => isActive ? "nav-active" : ""}>
             Home
           </NavLink>
-          <a href="#features"    onClick={e => handleNavClick(e, "features")}>Features</a>
+          <a href="#features"     onClick={e => handleNavClick(e, "features")}>Features</a>
           <a href="#how-it-works" onClick={e => handleNavClick(e, "how-it-works")}>How it works</a>
         </nav>
 
-        <a
-          href="#search"
-          className="nav-cta"
-          onClick={e => handleNavClick(e, "search")}
-        >
+        <a href="#search" className="nav-cta" onClick={e => handleNavClick(e, "search")}>
           Try it free
         </a>
       </div>
@@ -60,36 +55,24 @@ function Footer() {
         <div>
           <Link to="/" className="logo">
             <span className="logo-icon">
-              <img src="/logo.svg" alt="GitHub Analytics logo" />
+              <img src="/logo.svg" alt="" />
             </span>
             GitHub Analytics
           </Link>
-          <p className="footer-tagline">
-            Developer intelligence powered by the GitHub REST API.
-          </p>
+          <p className="footer-tagline">Developer intelligence powered by the GitHub REST API.</p>
         </div>
 
         <div className="footer-links">
           <Link to="/">Home</Link>
-          <a
-            href="https://github.com/isaad-ui/github-developer-analytics"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            GitHub
+          <a href="https://github.com/isaad-ui/github-developer-analytics" target="_blank" rel="noopener noreferrer">
+            Source
           </a>
-          <a
-            href="https://docs.github.com/en/rest"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href="https://docs.github.com/en/rest" target="_blank" rel="noopener noreferrer">
             API docs
           </a>
         </div>
 
-        <div className="footer-right">
-          © {new Date().getFullYear()} GitHub Developer Analytics
-        </div>
+        <div className="footer-right">© {new Date().getFullYear()} GitHub Developer Analytics</div>
       </div>
     </footer>
   );

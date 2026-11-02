@@ -1,13 +1,13 @@
 export default function StatsGrid({ stats, insights }) {
   const items = [
-    { label: "Total Stars", value: stats.totalStars },
-    { label: "Total Forks", value: stats.totalForks },
-    { label: "Total Repos", value: insights.total },
-    { label: "Repos With Languages", value: insights.withLang },
-    { label: "Repos With Stars", value: insights.withStars },
-    { label: "Avg Stars / Repo", value: insights.avgStars.toFixed(2) },
-    { label: "Forked Repos", value: insights.forked },
-    { label: "Archived Repos", value: insights.archived },
+    { label: "Total Stars",        value: stats.totalStars },
+    { label: "Total Forks",        value: stats.totalForks },
+    { label: "Total Repos",        value: insights.total },
+    { label: "With Languages",     value: insights.withLang },
+    { label: "With Stars",         value: insights.withStars },
+    { label: "Avg Stars",          value: insights.avgStars.toFixed(2) },
+    { label: "Forked",             value: insights.forked },
+    { label: "Archived",           value: insights.archived },
   ];
 
   return (
