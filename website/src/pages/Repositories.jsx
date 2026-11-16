@@ -63,10 +63,7 @@ export default function Repositories() {
           </Link>
 
           <div className="repos-page-title">
-            <h1>
-              Repositories for{" "}
-              <span className="gradient-text">@{username}</span>
-            </h1>
+            <h1>Repositories for @{username}</h1>
             {user && (
               <div className="repos-page-meta">
                 <img src={user.avatar_url} alt="" className="repos-avatar" />
@@ -88,7 +85,11 @@ export default function Repositories() {
         {status === "error" && (
           <div className="analytics-error">
             <div className="error-card">
-              <div className="error-icon">⚠️</div>
+              <div className="error-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r=".5" fill="currentColor"/>
+                </svg>
+              </div>
               <h3>Failed to load</h3>
               <p>{error}</p>
               <Link to="/" className="btn btn-primary">Back to Home</Link>

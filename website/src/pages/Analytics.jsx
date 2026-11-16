@@ -77,7 +77,11 @@ export default function Analytics() {
         {state.status === "error" && (
           <div className="analytics-error">
             <div className="error-card">
-              <div className="error-icon">⚠️</div>
+              <div className="error-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r=".5" fill="currentColor"/>
+                </svg>
+              </div>
               <h3>Something went wrong</h3>
               <p>{state.error}</p>
               <div className="error-actions">

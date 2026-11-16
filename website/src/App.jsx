@@ -41,7 +41,7 @@ function Navbar() {
         </nav>
 
         <a href="#search" className="nav-cta" onClick={e => handleNavClick(e, "search")}>
-          Try it free
+          Analyze a profile
         </a>
       </div>
     </header>
@@ -59,7 +59,7 @@ function Footer() {
             </span>
             GitHub Analytics
           </Link>
-          <p className="footer-tagline">Developer intelligence powered by the GitHub REST API.</p>
+          <p className="footer-tagline">Built on the public GitHub REST API.</p>
         </div>
 
         <div className="footer-links">

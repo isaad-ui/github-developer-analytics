@@ -4,6 +4,7 @@ import {
   getUserData, getRepositories,
   analyzeLanguages, calcStats, calcInsights, extractUsername,
 } from "../api.js";
+import { langColor } from "../langColors.js";
 
 /* ── Inline SVG icons — no library needed ─────────────────── */
 const icons = {
@@ -40,11 +41,11 @@ const icons = {
 };
 
 const FEATURES = [
-  { icon: "user",      title: "Profile Analytics",   desc: "Followers, following, public repositories, bio, location, and account metadata — all in one view." },
+  { icon: "user",      title: "Profile Analytics",   desc: "Followers, following, repository count, bio and location in one place." },
   { icon: "barChart",  title: "Language Analysis",   desc: "Percentage breakdown of every language across all public repositories, sorted by usage." },
   { icon: "star",      title: "Repository Stats",    desc: "Total stars, forks, largest repository, most starred project, and most recently updated." },
   { icon: "trophy",    title: "Top Repositories",    desc: "Repositories ranked by star count with descriptions, primary language, and activity." },
-  { icon: "lightbulb", title: "Developer Insights",  desc: "Observations derived directly from repository data — language spread, activity patterns, and more." },
+  { icon: "lightbulb", title: "Developer Insights",  desc: "Plain observations from the repository data, like language spread and how recently things changed." },
   { icon: "search",    title: "Repository Browser",  desc: "Full-text search across all repositories with sort and language filter." },
 ];
 
@@ -85,16 +86,12 @@ export default function Home() {
         <div className="container hero-grid">
 
           <div className="hero-content">
-            <div className="hero-eyebrow">
-              <span className="hero-label">GitHub Developer Analytics</span>
-            </div>
-
-            <h1>Understand your GitHub activity.</h1>
+            <h1>See what a GitHub profile <span className="hero-accent">actually</span> shows.</h1>
 
             <p className="hero-desc">
-              Analyze any public GitHub profile instantly. Language
-              breakdowns, repository statistics, and developer
-              insights — powered by the GitHub REST API.
+              Paste a username and get languages, stars, top repositories
+              and activity on one page. Everything is pulled straight from
+              the public GitHub API.
             </p>
 
             <form className="hero-search" onSubmit={handleSubmit} id="search">
@@ -112,7 +109,7 @@ export default function Home() {
                   Analyze
                 </button>
               </div>
-              <p className="hero-note">No account required · Any public GitHub profile</p>
+              <p className="hero-note">Works with any public profile. No sign-in.</p>
             </form>
           </div>
 
@@ -120,11 +117,9 @@ export default function Home() {
           <div className="dashboard-wrapper">
             <div className="dashboard">
               <div className="db-titlebar">
-                <span className="db-title">Developer Overview</span>
-                <div className="db-live">
-                  <span className="db-live-dot" />
-                  {demo ? "Live" : "Loading"}
-                </div>
+                <div className="db-dots"><i /><i /><i /></div>
+                <span className="db-url">api.github.com/users/<b>isaad-ui</b></span>
+                <span className="db-url">{demo ? "200" : "..."}</span>
               </div>
 
               {demo ? (
@@ -154,11 +149,11 @@ export default function Home() {
                   <div className="db-section">
                     <div className="db-section-title">Languages</div>
                     <div className="db-lang-bars">
-                      {Object.entries(demo.languages).slice(0, 4).map(([lang, pct], i) => (
+                      {Object.entries(demo.languages).slice(0, 4).map(([lang, pct]) => (
                         <div key={lang} className="db-lang-row">
                           <span className="db-lang-name">{lang}</span>
                           <div className="db-lang-track">
-                            <div className={`db-lang-fill${i > 0 ? " dim" : ""}`} style={{ width:`${pct}%` }} />
+                            <div className="db-lang-fill" style={{ width:`${pct}%`, background: langColor(lang) }} />
                           </div>
                           <span className="db-lang-pct">{pct.toFixed(0)}%</span>
                         </div>
@@ -226,37 +221,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── STATS STRIP ──────────────────────────── */}
-      <div className="stats-strip">
-        <div className="container stats-strip-inner">
-          {[
-            ["GitHub REST API", "Data source"],
-            null,
-            ["0", "Signups required"],
-            null,
-            ["Public", "Open source"],
-            null,
-            ["Real-time", "Data fetching"],
-          ].map((item, i) =>
-            item === null ? (
-              <div key={i} className="strip-div" />
-            ) : (
-              <div key={i} className="strip-item">
-                <span className="strip-val">{item[0]}</span>
-                <span className="strip-label">{item[1]}</span>
-              </div>
-            )
-          )}
-        </div>
-      </div>
-
       {/* ── FEATURES ─────────────────────────────── */}
       <section className="section" id="features">
         <div className="container">
           <div className="section-heading">
-            <span className="label" style={{ marginBottom: "var(--sp-3)" }}>Features</span>
-            <h2>Everything you need to understand your GitHub presence.</h2>
-            <p>Built on the GitHub REST API. No backend, no data stored, no account needed.</p>
+            <h2>What you get</h2>
+            <p>Runs in your browser against the GitHub REST API. Nothing is stored.</p>
           </div>
 
           <div className="features-list">
@@ -275,8 +245,7 @@ export default function Home() {
       <section className="section section-dark" id="how-it-works">
         <div className="container">
           <div className="section-heading">
-            <span className="label" style={{ marginBottom: "var(--sp-3)" }}>How it works</span>
-            <h2>From username to analytics in seconds.</h2>
+            <h2>How it works</h2>
           </div>
 
           <div className="steps-row">
@@ -300,11 +269,10 @@ export default function Home() {
       <section className="section" id="about">
         <div className="container">
           <div className="section-heading">
-            <span className="label" style={{ marginBottom: "var(--sp-3)" }}>About</span>
-            <h2>What is GitHub Developer Analytics?</h2>
+            <h2>About the project</h2>
             <p>
-              A lightweight analytics tool that transforms public GitHub data
-              into structured developer intelligence — with no backend server and no configuration.
+              A small, open source tool that turns public GitHub data into a
+              readable summary. There is no backend and nothing to configure.
             </p>
           </div>
 
@@ -350,8 +318,7 @@ export default function Home() {
       <section className="section section-dark" id="roadmap">
         <div className="container">
           <div className="section-heading">
-            <span className="label" style={{ marginBottom: "var(--sp-3)" }}>Roadmap</span>
-            <h2>What's built, what's next.</h2>
+            <h2>Roadmap</h2>
           </div>
 
           <div className="roadmap-cols">
@@ -425,9 +392,8 @@ export default function Home() {
       <section className="cta-section" id="cta">
         <div className="container">
           <div className="cta-box">
-            <span className="label" style={{ marginBottom: "var(--sp-3)" }}>Get started</span>
             <h2>Analyze any GitHub profile.</h2>
-            <p>Enter any public GitHub username. No signup, no configuration required.</p>
+            <p>Try your own username, or someone you're curious about.</p>
             <form className="cta-row" onSubmit={handleSubmit}>
               <input
                 type="text"
