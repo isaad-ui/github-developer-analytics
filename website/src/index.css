@@ -3,28 +3,28 @@
 ============================================================ */
 :root {
   /* Backgrounds — cool neutral, clear steps between layers */
-  --bg-page:    #08090b;
-  --bg-surface: #0f1114;
-  --bg-raised:  #161a1f;
-  --bg-hover:   #1d2228;
+  --bg-page:    #0f1218;
+  --bg-surface: #161a22;
+  --bg-raised:  #1e232d;
+  --bg-hover:   #272d39;
 
   /* Borders — solid, so edges stay crisp */
-  --bd:         #1f242b;
-  --bd-strong:  #2d343d;
+  --bd:         #262c37;
+  --bd-strong:  #374050;
 
   /* Text — higher contrast than before */
-  --tx-primary:   #f5f7fa;
-  --tx-secondary: #a3acb9;
-  --tx-muted:     #6e7781;
-  --tx-link:      #5aa9ff;
+  --tx-primary:   #ffffff;
+  --tx-secondary: #bcc5d1;
+  --tx-muted:     #8792a2;
+  --tx-link:      #6cb8ff;
 
   /* Accent */
-  --ac:       #3ddc84;   /* buttons, focus */
-  --ac-h:     #62e69c;   /* hover */
+  --ac:       #4af08f;   /* buttons, focus */
+  --ac-h:     #74f5aa;   /* hover */
   --ac-on:    #04210f;   /* text on accent */
-  --ac-text:  #3ddc84;   /* accent text on dark */
-  --ac-dim:   rgba(61,220,132,.12);
-  --ac-bd:    rgba(61,220,132,.32);
+  --ac-text:  #4af08f;   /* accent text on dark */
+  --ac-dim:   rgba(74,240,143,.14);
+  --ac-bd:    rgba(74,240,143,.36);
 
   /* States */
   --err:      #ff5c5c;
@@ -103,7 +103,7 @@ img { display:block; max-width:100%; }
 .navbar {
   position:sticky; top:0; z-index:200;
   height:var(--nav-h);
-  background:rgba(8,9,11,.85);
+  background:rgba(15,18,24,.85);
   backdrop-filter:blur(12px);
   -webkit-backdrop-filter:blur(12px);
   border-bottom:1px solid var(--bd);
